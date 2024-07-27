@@ -66,3 +66,24 @@ button:hover {
     margin-left: 10px;
     color: #333;
 }
+
+#prayer-times {
+    margin-bottom: 20px;
+}
+
+#time-until-next-prayer, #hijri-date {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+#notification-settings {
+    margin-top: 20px;
+}
+
+#notification-options {
+    margin-top: 10px;
+}
+
+#save-settings {
+    margin-top: 10px;
+}

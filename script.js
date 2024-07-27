@@ -78,6 +78,14 @@ function scheduleNotification(prayerTime, reminderMinutes) {
             });
         }, reminderTime.getTime() - now.getTime());
     }
+
+    if (prayerDate > now) {
+        setTimeout(() => {
+            showNotification('Prayer Time', {
+                body: `It's time for prayer. ${formatTime24To12(prayerTime)}`,
+            });
+        }, prayerDate.getTime() - now.getTime());
+    }
 }
 
 function scheduleNotifications(prayerTimes, reminderMinutes) {
@@ -149,15 +157,14 @@ function updateNextPrayerTime(prayerTimes) {
     }
 
     const timeUntilNextPrayer = nextPrayerTime - now;
-    const minutesUntilNextPrayer = Math.floor((timeUntilNextPrayer / 1000) / 60);
-    const hoursUntilNextPrayer = Math.floor(minutesUntilNextPrayer / 60);
-    const displayMinutes = minutesUntilNextPrayer % 60;
+    const minutesUntilNextPrayer = Math.floor((timeUntilNextPrayer % (1000 * 60 * 60)) / (1000 * 60));
+    const hoursUntilNextPrayer = Math.floor(timeUntilNextPrayer / (1000 * 60 * 60));
 
     let timeUntilString;
     if (hoursUntilNextPrayer > 0) {
-        timeUntilString = `${hoursUntilNextPrayer} hours and ${displayMinutes} minutes until ${nextPrayerName}`;
+        timeUntilString = `${hoursUntilNextPrayer} hours and ${minutesUntilNextPrayer} minutes until ${nextPrayerName}`;
     } else {
-        timeUntilString = `${displayMinutes} minutes until ${nextPrayerName}`;
+        timeUntilString = `${minutesUntilNextPrayer} minutes until ${nextPrayerName}`;
     }
 
     document.getElementById('time-until-next-prayer').textContent = timeUntilString;
