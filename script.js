@@ -74,7 +74,7 @@ function scheduleNotification(prayerTime, reminderMinutes) {
     if (reminderTime > now) {
         setTimeout(() => {
             showNotification('Prayer Reminder', {
-                body: `It's time for prayer. ${formatTime24To12(prayerTime)}`,
+                body: `${reminderMinutes} until the upcoming prayer. ${formatTime24To12(prayerTime)}`,
             });
         }, reminderTime.getTime() - now.getTime());
     }
