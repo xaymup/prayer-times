@@ -25,6 +25,8 @@ function getPrayerTimes(latitude, longitude) {
 
             updateNextPrayerTime(prayerTimes);
             setInterval(() => updateNextPrayerTime(prayerTimes), 60000); // Update every minute
+
+            displayHijriDate(data.data.date.hijri);
         })
         .catch(error => {
             console.error('Error fetching prayer times:', error);
@@ -159,6 +161,25 @@ function updateNextPrayerTime(prayerTimes) {
     }
 
     document.getElementById('time-until-next-prayer').textContent = timeUntilString;
+}
+
+function getOrdinalSuffix(day) {
+    if (day > 3 && day < 21) return 'th'; // Handles 4-20
+    switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
+
+function displayHijriDate(hijriDate) {
+    const hijriDay = hijriDate.day;
+    const hijriMonth = hijriDate.month.en;
+    const hijriYear = hijriDate.year;
+    const ordinalSuffix = getOrdinalSuffix(hijriDay);
+    const formattedHijriDate = `${hijriDay}${ordinalSuffix} of ${hijriMonth} ${hijriYear}`;
+    document.getElementById('hijri-date').textContent = formattedHijriDate;
 }
 
 getLocation();
