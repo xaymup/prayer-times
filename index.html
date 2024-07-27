@@ -5,28 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer Times</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
 </head>
 <body>
-    <h1>Prayer Times</h1>
-    <div id="prayer-times">
-        <p>Fajr: <span id="fajr-time"></span></p>
-        <p>Dhuhr: <span id="dhuhr-time"></span></p>
-        <p>Asr: <span id="asr-time"></span></p>
-        <p>Maghrib: <span id="maghrib-time"></span></p>
-        <p>Isha: <span id="isha-time"></span></p>
-    </div>
-    <div id="time-until-next-prayer"></div>
-    <div id="hijri-date"></div>
-    <div id="notification-settings">
-        <label>
-            <input type="checkbox" id="notification-toggle"> Enable Notifications
-            <span id="current-reminder" style="display: none;"> - Reminder: <span id="reminder-display">5</span> minutes before</span>
-        </label>
-        <div id="notification-options" style="display: none;">
-            <label for="reminder-time">Reminder time (minutes before prayer):</label>
-            <input type="range" id="reminder-time" min="1" max="60" value="5">
-            <span id="reminder-value">5</span> minutes
-            <button id="save-settings">Save</button>
+    <div class="container">
+        <h1><i class="fas fa-moon"></i> Prayer Times</h1>
+        <table id="prayer-times">
+            <tbody>
+                <tr>
+                    <td>Fajr</td>
+                    <td id="fajr-time"></td>
+                </tr>
+                <tr>
+                    <td>Dhuhr</td>
+                    <td id="dhuhr-time"></td>
+                </tr>
+                <tr>
+                    <td>Asr</td>
+                    <td id="asr-time"></td>
+                </tr>
+                <tr>
+                    <td>Maghrib</td>
+                    <td id="maghrib-time"></td>
+                </tr>
+                <tr>
+                    <td>Isha</td>
+                    <td id="isha-time"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="time-until-next-prayer"></div>
+        <div id="hijri-date"></div>
+        <div id="notification-settings">
+            <label>
+                <input type="checkbox" id="notification-toggle"> Enable Notifications
+                <span id="current-reminder" style="display: none;"> - Reminder: <span id="reminder-display">5</span> minutes before</span>
+            </label>
+            <div id="notification-options" style="display: none;">
+                <label for="reminder-time">Reminder time (minutes before prayer):</label>
+                <input type="range" id="reminder-time" min="1" max="60" value="5">
+                <span id="reminder-value">5</span> minutes
+                <button id="save-settings">Save</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

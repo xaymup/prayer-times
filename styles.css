@@ -1,19 +1,41 @@
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f4f4f4;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #212121; /* Optional: background color for better visibility */
+}
+
+.container {
+    width: 100%;
+    max-width: 600px; /* Adjust the maximum width as needed */
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: #fff; /* Optional: background color for the content area */
+    border-radius: 8px; /* Optional: rounded corners for the content area */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: shadow for better visibility */
 }
 
 h1 {
     color: #333;
 }
 
-#prayer-times {
-    margin-top: 20px;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
 }
 
 p {
@@ -25,11 +47,7 @@ span {
 }
 
 #notification-settings {
-    margin-top: 20px;
-    background-color: #fff;
     padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 label {
@@ -59,31 +77,14 @@ button:hover {
     background-color: #45a049;
 }
 
-/* Existing styles... */
-
 #current-reminder {
     font-weight: bold;
     margin-left: 10px;
     color: #333;
 }
 
-#prayer-times {
-    margin-bottom: 20px;
-}
-
 #time-until-next-prayer, #hijri-date {
-    font-size: 18px;
     margin: 10px 0;
+    font-weight: bold;
 }
 
-#notification-settings {
-    margin-top: 20px;
-}
-
-#notification-options {
-    margin-top: 10px;
-}
-
-#save-settings {
-    margin-top: 10px;
-}
