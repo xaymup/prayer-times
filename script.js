@@ -22,6 +22,9 @@ function getPrayerTimes(latitude, longitude) {
                 const reminderMinutes = parseInt(localStorage.getItem('reminderMinutes'), 10) || 5;
                 scheduleNotifications(prayerTimes, reminderMinutes);
             }
+
+            updateNextPrayerTime(prayerTimes);
+            setInterval(() => updateNextPrayerTime(prayerTimes), 60000); // Update every minute
         })
         .catch(error => {
             console.error('Error fetching prayer times:', error);
@@ -119,6 +122,43 @@ if (localStorage.getItem('notificationsEnabled') === 'true') {
     document.getElementById('notification-toggle').checked = true;
     document.getElementById('current-reminder').style.display = 'inline';
     document.getElementById('reminder-display').textContent = localStorage.getItem('reminderMinutes') || 5;
+}
+
+function updateNextPrayerTime(prayerTimes) {
+    const now = new Date();
+    const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    let nextPrayerTime, nextPrayerName;
+
+    for (const prayer of prayerNames) {
+        const [hours, minutes] = prayerTimes[prayer].split(':');
+        const prayerDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        if (prayerDate > now) {
+            nextPrayerTime = prayerDate;
+            nextPrayerName = prayer;
+            break;
+        }
+    }
+
+    if (!nextPrayerTime) {
+        // If no prayer time is found for today, the next prayer is Fajr of the next day
+        const [hours, minutes] = prayerTimes['Fajr'].split(':');
+        nextPrayerTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, hours, minutes);
+        nextPrayerName = 'Fajr';
+    }
+
+    const timeUntilNextPrayer = nextPrayerTime - now;
+    const minutesUntilNextPrayer = Math.floor((timeUntilNextPrayer / 1000) / 60);
+    const hoursUntilNextPrayer = Math.floor(minutesUntilNextPrayer / 60);
+    const displayMinutes = minutesUntilNextPrayer % 60;
+
+    let timeUntilString;
+    if (hoursUntilNextPrayer > 0) {
+        timeUntilString = `${hoursUntilNextPrayer} hours and ${displayMinutes} minutes until ${nextPrayerName}`;
+    } else {
+        timeUntilString = `${displayMinutes} minutes until ${nextPrayerName}`;
+    }
+
+    document.getElementById('time-until-next-prayer').textContent = timeUntilString;
 }
 
 getLocation();
