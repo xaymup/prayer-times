@@ -1,9 +1,8 @@
 function formatTime24To12(time24) {
-    // Split time into hours and minutes
     const [hours, minutes] = time24.split(':');
     const hour = parseInt(hours, 10);
     const ampm = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12; // Convert hour from 24-hour to 12-hour format
+    const hour12 = hour % 12 || 12;
     return `${hour12}:${minutes} ${ampm}`;
 }
 
@@ -12,12 +11,17 @@ function getPrayerTimes(latitude, longitude) {
         .then(response => response.json())
         .then(data => {
             const prayerTimes = data.data.timings;
-            // Format times to AM/PM
             document.getElementById('fajr-time').textContent = formatTime24To12(prayerTimes.Fajr);
             document.getElementById('dhuhr-time').textContent = formatTime24To12(prayerTimes.Dhuhr);
             document.getElementById('asr-time').textContent = formatTime24To12(prayerTimes.Asr);
             document.getElementById('maghrib-time').textContent = formatTime24To12(prayerTimes.Maghrib);
             document.getElementById('isha-time').textContent = formatTime24To12(prayerTimes.Isha);
+            
+            // If reminders are enabled, set up notifications
+            if (localStorage.getItem('notificationsEnabled') === 'true') {
+                const reminderMinutes = parseInt(localStorage.getItem('reminderMinutes'), 10) || 5;
+                scheduleNotifications(prayerTimes, reminderMinutes);
+            }
         })
         .catch(error => {
             console.error('Error fetching prayer times:', error);
@@ -32,12 +36,89 @@ function getLocation() {
             getPrayerTimes(latitude, longitude);
         }, error => {
             console.error('Error getting location:', error);
-            // Handle location error (e.g., user denied permission)
         });
     } else {
         console.error('Geolocation is not supported by this browser.');
     }
 }
 
-// Request location permission and get prayer times
+function requestNotificationPermission() {
+    if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            } else {
+                console.error('Notification permission denied.');
+            }
+        });
+    }
+}
+
+function showNotification(title, options) {
+    if (Notification.permission === 'granted') {
+        new Notification(title, options);
+    }
+}
+
+function scheduleNotification(prayerTime, reminderMinutes) {
+    const now = new Date();
+    const [hours, minutes] = prayerTime.split(':');
+    const prayerDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    const reminderTime = new Date(prayerDate.getTime() - reminderMinutes * 60000);
+
+    if (reminderTime > now) {
+        setTimeout(() => {
+            showNotification('Prayer Reminder', {
+                body: `It's time for prayer. ${formatTime24To12(prayerTime)}`,
+            });
+        }, reminderTime.getTime() - now.getTime());
+    }
+}
+
+function scheduleNotifications(prayerTimes, reminderMinutes) {
+    scheduleNotification(prayerTimes.Fajr, reminderMinutes);
+    scheduleNotification(prayerTimes.Dhuhr, reminderMinutes);
+    scheduleNotification(prayerTimes.Asr, reminderMinutes);
+    scheduleNotification(prayerTimes.Maghrib, reminderMinutes);
+    scheduleNotification(prayerTimes.Isha, reminderMinutes);
+}
+
+document.getElementById('notification-toggle').addEventListener('change', function() {
+    const notificationOptions = document.getElementById('notification-options');
+    const currentReminder = document.getElementById('current-reminder');
+    if (this.checked) {
+        requestNotificationPermission();
+        notificationOptions.style.display = 'block';
+        currentReminder.style.display = 'none';
+    } else {
+        notificationOptions.style.display = 'none';
+        currentReminder.style.display = 'none';
+        localStorage.setItem('notificationsEnabled', 'false');
+    }
+});
+
+document.getElementById('reminder-time').addEventListener('input', function() {
+    document.getElementById('reminder-value').textContent = this.value;
+});
+
+document.getElementById('save-settings').addEventListener('click', function() {
+    const reminderMinutes = parseInt(document.getElementById('reminder-time').value, 10);
+    document.getElementById('notification-options').style.display = 'none';
+    document.getElementById('current-reminder').style.display = 'inline';
+    document.getElementById('reminder-display').textContent = reminderMinutes;
+
+    localStorage.setItem('notificationsEnabled', 'true');
+    localStorage.setItem('reminderMinutes', reminderMinutes);
+
+    // Fetch new prayer times and set up notifications
+    getLocation();
+});
+
+// On page load, check if notifications are enabled and get prayer times
+if (localStorage.getItem('notificationsEnabled') === 'true') {
+    document.getElementById('notification-toggle').checked = true;
+    document.getElementById('current-reminder').style.display = 'inline';
+    document.getElementById('reminder-display').textContent = localStorage.getItem('reminderMinutes') || 5;
+}
+
 getLocation();

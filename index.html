@@ -15,6 +15,18 @@
         <p>Maghrib: <span id="maghrib-time"></span></p>
         <p>Isha: <span id="isha-time"></span></p>
     </div>
+    <div id="notification-settings">
+        <label>
+            <input type="checkbox" id="notification-toggle"> Enable Notifications
+            <span id="current-reminder" style="display: none;"> - Reminder: <span id="reminder-display">5</span> minutes before</span>
+        </label>
+        <div id="notification-options" style="display: none;">
+            <label for="reminder-time">Reminder time (minutes before prayer):</label>
+            <input type="range" id="reminder-time" min="1" max="60" value="5">
+            <span id="reminder-value">5</span> minutes
+            <button id="save-settings">Save</button>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
