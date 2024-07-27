@@ -1,13 +1,23 @@
+function formatTime24To12(time24) {
+    // Split time into hours and minutes
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12; // Convert hour from 24-hour to 12-hour format
+    return `${hour12}:${minutes} ${ampm}`;
+}
+
 function getPrayerTimes(latitude, longitude) {
     fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}`)
         .then(response => response.json())
         .then(data => {
             const prayerTimes = data.data.timings;
-            document.getElementById('fajr-time').textContent = prayerTimes.Fajr;
-            document.getElementById('dhuhr-time').textContent = prayerTimes.Dhuhr;
-            document.getElementById('asr-time').textContent = prayerTimes.Asr;
-            document.getElementById('maghrib-time').textContent = prayerTimes.Maghrib;
-            document.getElementById('isha-time').textContent = prayerTimes.Isha;
+            // Format times to AM/PM
+            document.getElementById('fajr-time').textContent = formatTime24To12(prayerTimes.Fajr);
+            document.getElementById('dhuhr-time').textContent = formatTime24To12(prayerTimes.Dhuhr);
+            document.getElementById('asr-time').textContent = formatTime24To12(prayerTimes.Asr);
+            document.getElementById('maghrib-time').textContent = formatTime24To12(prayerTimes.Maghrib);
+            document.getElementById('isha-time').textContent = formatTime24To12(prayerTimes.Isha);
         })
         .catch(error => {
             console.error('Error fetching prayer times:', error);
