@@ -181,7 +181,7 @@ function getOrdinalSuffix(day) {
 }
 
 function displayHijriDate(hijriDate) {
-    const hijriDay = hijriDate.day;
+    const hijriDay = parseInt(hijriDate.day, 10);
     const hijriMonth = hijriDate.month.en;
     const hijriYear = hijriDate.year;
     const ordinalSuffix = getOrdinalSuffix(hijriDay);
